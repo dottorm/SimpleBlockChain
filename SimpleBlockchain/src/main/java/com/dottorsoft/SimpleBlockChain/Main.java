@@ -1,4 +1,4 @@
-package com.dottorsoft.SimpleBlockchain;
+package com.dottorsoft.SimpleBlockChain;
 
 
 public class Main 
