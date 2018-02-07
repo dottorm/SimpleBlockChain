@@ -27,4 +27,12 @@ public class Block {
 				);
 		return calculatedhash;
 	}
+
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
 }
