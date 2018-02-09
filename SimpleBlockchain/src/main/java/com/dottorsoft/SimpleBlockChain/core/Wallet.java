@@ -37,9 +37,10 @@ public class Wallet {
 	}
 	
 	public float getBalance() {
-		float total = 0;	
+		float total = 0;
+		TransactionOutput UTXO;
         for (Map.Entry<String, TransactionOutput> item: Main.UTXOs.entrySet()){
-        	TransactionOutput UTXO = item.getValue();
+        	UTXO = item.getValue();
             if(UTXO.isMine(publicKey)) { //if output belongs to me ( if coins belong to me )
             	UTXOs.put(UTXO.id,UTXO); //add it to our list of unspent transactions.
             	total += UTXO.value ; 
@@ -56,8 +57,9 @@ public class Wallet {
 		ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
 		
 		float total = 0;
+		TransactionOutput UTXO;
 		for (Map.Entry<String, TransactionOutput> item: UTXOs.entrySet()){
-			TransactionOutput UTXO = item.getValue();
+			UTXO= item.getValue();
 			total += UTXO.value;
 			inputs.add(new TransactionInput(UTXO.id));
 			if(total > value) break;

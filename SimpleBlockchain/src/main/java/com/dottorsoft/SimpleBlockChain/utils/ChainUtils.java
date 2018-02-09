@@ -23,12 +23,12 @@ public class ChainUtils {
 			currentBlock = blockchain.get(i);
 			previousBlock = blockchain.get(i-1);
 			//compare registered hash and calculated hash:
-			if(!currentBlock.hash.equals(currentBlock.calculateHash()) ){
+			if(isValidBlock(currentBlock,currentBlock) ){
 				System.out.println("#Current Hashes not equal");
 				return false;
 			}
 			//compare previous hash and registered previous hash
-			if(!previousBlock.hash.equals(currentBlock.previousHash) ) {
+			if(isValidBlock(previousBlock,currentBlock)) {
 				System.out.println("#Previous Hashes not equal");
 				return false;
 			}
@@ -86,6 +86,10 @@ public class ChainUtils {
 		}
 		System.out.println("Blockchain is valid");
 		return true;
+	}
+	
+	private static boolean isValidBlock(Block block, Block currentBlock){
+		return !block.hash.equals(currentBlock.calculateHash());
 	}
 
 }
