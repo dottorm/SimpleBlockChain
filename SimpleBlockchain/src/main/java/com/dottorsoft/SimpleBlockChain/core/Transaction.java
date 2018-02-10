@@ -5,7 +5,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 
 import com.dottorsoft.SimpleBlockChain.Main;
-import com.dottorsoft.SimpleBlockChain.utils.StringUtil;
+import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
 public class Transaction {
 	

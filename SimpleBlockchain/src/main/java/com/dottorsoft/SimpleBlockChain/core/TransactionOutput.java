@@ -2,7 +2,7 @@ package com.dottorsoft.SimpleBlockChain.core;
 
 import java.security.PublicKey;
 
-import com.dottorsoft.SimpleBlockChain.utils.StringUtil;
+import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
 public class TransactionOutput {
 	

@@ -3,7 +3,7 @@ package com.dottorsoft.SimpleBlockChain.core;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.dottorsoft.SimpleBlockChain.utils.StringUtil;
+import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
 public class Block {
 

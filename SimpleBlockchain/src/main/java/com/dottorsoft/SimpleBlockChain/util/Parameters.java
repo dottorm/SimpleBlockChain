@@ -1,4 +1,4 @@
-package com.dottorsoft.SimpleBlockChain.utils;
+package com.dottorsoft.SimpleBlockChain.util;
 
 import java.util.ArrayList;
 
