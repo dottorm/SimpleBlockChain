@@ -1,7 +1,6 @@
 package com.dottorsoft.SimpleBlockChain;
 
 import java.security.Security;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.dottorsoft.SimpleBlockChain.core.Block;
@@ -9,12 +8,12 @@ import com.dottorsoft.SimpleBlockChain.core.Transaction;
 import com.dottorsoft.SimpleBlockChain.core.TransactionOutput;
 import com.dottorsoft.SimpleBlockChain.core.Wallet;
 import com.dottorsoft.SimpleBlockChain.utils.ChainUtils;
-import com.google.gson.GsonBuilder;
 import com.dottorsoft.SimpleBlockChain.utils.Parameters;
+import com.dottorsoft.SimpleBlockChain.utils.StringUtil;
 
 public class Main {
 	
-	public static ArrayList<Block> blockchain = new ArrayList<Block>();
+	
 	public static HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
 	
 	public static float minimumTransaction = 0.1f;
@@ -64,10 +63,15 @@ public class Main {
 		block3.addTransaction(walletB.sendFunds( walletA.publicKey, 20));
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
+		addBlock(block3);
 		
-		ChainUtils.isChainValid(blockchain, genesisTransaction);
 		
-		String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
+		if(!ChainUtils.isChainValid(Parameters.blockchain, genesisTransaction)){
+			System.out.println("Not Valid Chain!!");
+			return;
+		}
+		
+		String blockchainJson = StringUtil.getJson(Parameters.blockchain);
 		System.out.println("\nThe block chain: ");
 		System.out.println(blockchainJson);
 		
@@ -77,6 +81,6 @@ public class Main {
 	
 	public static void addBlock(Block newBlock) {
 		newBlock.mineBlock(Parameters.difficulty);
-		blockchain.add(newBlock);
+		Parameters.blockchain.add(newBlock);
 	}
 }

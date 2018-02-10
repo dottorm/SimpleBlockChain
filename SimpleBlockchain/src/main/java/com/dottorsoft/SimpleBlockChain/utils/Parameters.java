@@ -1,7 +1,13 @@
 package com.dottorsoft.SimpleBlockChain.utils;
 
+import java.util.ArrayList;
+
+import com.dottorsoft.SimpleBlockChain.core.Block;
+
 public class Parameters {
 	
-	public static int difficulty = 7;
+	public static int difficulty = 2;
+	
+	public static ArrayList<Block> blockchain = new ArrayList<Block>();
 
 }
