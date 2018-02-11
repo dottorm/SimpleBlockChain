@@ -16,7 +16,7 @@ public class Peer2Peer {
 	private int port = 8888;
 	private Socket socket;
 	private ServerSocket server;
-	private ArrayList<Peer> peers;
+	private ArrayList<Peer> peers = new ArrayList<Peer>();
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
 	private Thread peerThread;
@@ -43,13 +43,20 @@ public class Peer2Peer {
 		server = new ServerSocket(port);
 		System.out.println("Server Started port: "+port);
 		String command;
+		
+		Peer peer;
+		
 		while(true){
+			
 			socket = server.accept();
 			inputStream = new DataInputStream(socket.getInputStream());
 			outputStream = new DataOutputStream(socket.getOutputStream());
 			System.out.println("Connection Received from: "+socket.toString());
+						
+			peer = new Peer(socket.getInetAddress().toString(),socket.getPort());
+			peers.add(peer);
 			
-			System.out.println(socket.getPort()+" "+socket.getInetAddress().toString());
+			System.out.println("New Peer: "+peer.toString());
 			
 			command = inputStream.readUTF();
 			System.out.println(command);

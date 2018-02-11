@@ -10,6 +10,7 @@ import com.dottorsoft.SimpleBlockChain.core.Wallet;
 import com.dottorsoft.SimpleBlockChain.networking.Peer2Peer;
 import com.dottorsoft.SimpleBlockChain.util.ChainUtils;
 import com.dottorsoft.SimpleBlockChain.util.Parameters;
+import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
 public class Main {
 	
@@ -43,7 +44,7 @@ public class Main {
 		addBlock(genesis);
 		
 		//testing
-		Block block1 = new Block(genesis.hash);
+		Block block1 = new Block(genesis.getHash());
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("\nWalletA is Attempting to send funds (40) to WalletB...");
 		block1.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
@@ -51,14 +52,14 @@ public class Main {
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
 		
-		Block block2 = new Block(block1.hash);
+		Block block2 = new Block(block1.getHash());
 		System.out.println("\nWalletA Attempting to send more funds (1000) than it has...");
 		block2.addTransaction(walletA.sendFunds(walletB.publicKey, 1000f));
 		addBlock(block2);
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
 		
-		Block block3 = new Block(block2.hash);
+		Block block3 = new Block(block2.getHash());
 		System.out.println("\nWalletB is Attempting to send funds (20) to WalletA...");
 		block3.addTransaction(walletB.sendFunds( walletA.publicKey, 20));
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
@@ -75,11 +76,12 @@ public class Main {
 		System.out.println("\nThe block chain: ");
 		System.out.println(blockchainJson);*/
 		
-		Peer2Peer server = new Peer2Peer(8888);
+		/*Peer2Peer server = new Peer2Peer(8888);
 		Peer2Peer client = new Peer2Peer(8889);
 		client.connect("localhost", 8888);
-		client.send("getblockchain");
-		client.receive();
+		client.send("getblockchain");*/
+		
+		System.out.println(StringUtil.getJson(ChainUtils.getLastBlock()));
 	}
 	
 	

@@ -23,25 +23,25 @@ public class ChainUtils {
 			currentBlock = blockchain.get(i);
 			previousBlock = blockchain.get(i-1);
 			//compare registered hash and calculated hash:
-			if(isValidHash(currentBlock.hash, currentBlock.calculateHash()) ){
+			if(isValidHash(currentBlock.getHash(), currentBlock.calculateHash()) ){
 				System.out.println("#Current Hashes not equal");
 				return false;
 			}
 			//compare previous hash and registered previous hash
-			if(isValidHash(previousBlock.hash,currentBlock.previousHash) ) {
+			if(isValidHash(previousBlock.getHash(),currentBlock.getPreviousHash()) ) {
 				System.out.println("#Previous Hashes not equal");
 				return false;
 			}
 			//check if hash is solved
-			if(!currentBlock.hash.substring( 0, Parameters.difficulty).equals(hashTarget)) {
+			if(!currentBlock.getHash().substring( 0, Parameters.difficulty).equals(hashTarget)) {
 				System.out.println("#This block hasn't been mined");
 				return false;
 			}
 			
 			//loop thru blockchains transactions:
 			TransactionOutput tempOutput;
-			for(int t=0; t <currentBlock.transactions.size(); t++) {
-				Transaction currentTransaction = currentBlock.transactions.get(t);
+			for(int t=0; t <currentBlock.getTransactions().size(); t++) {
+				Transaction currentTransaction = currentBlock.getTransactions().get(t);
 				
 				if(!currentTransaction.verifiySignature()) {
 					System.out.println("#Signature on Transaction(" + t + ") is Invalid");
@@ -90,6 +90,12 @@ public class ChainUtils {
 	
 	private static boolean isValidHash(String hash, String prevHash){
 		return !hash.equals(prevHash);
+	}
+	
+	public static Block getLastBlock(){
+		if(Parameters.blockchain.size() == 0 || Parameters.blockchain == null) return null;
+		
+		return Parameters.blockchain.get(Parameters.blockchain.size() -1);
 	}
 
 }
