@@ -83,7 +83,7 @@ public class StringUtil {
 		
 		ArrayList<String> previousTreeLayer = new ArrayList<String>();
 		for(Transaction transaction : transactions) {
-			previousTreeLayer.add(transaction.transactionId);
+			previousTreeLayer.add(transaction.getTransactionId());
 		}
 		ArrayList<String> treeLayer = previousTreeLayer;
 		

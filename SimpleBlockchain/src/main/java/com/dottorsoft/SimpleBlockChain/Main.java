@@ -35,9 +35,9 @@ public class Main {
 		//create genesis transaction, which sends 100 NoobCoin to walletA: 
 		genesisTransaction = new Transaction(wallet.publicKey, walletA.publicKey, 100f, null);
 		genesisTransaction.generateSignature(wallet.privateKey);	 //manually sign the genesis transaction	
-		genesisTransaction.transactionId = "0"; //manually set the transaction id
-		genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value, genesisTransaction.transactionId)); //manually add the Transactions Output
-		UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0)); //its important to store our first transaction in the UTXOs list.
+		genesisTransaction.setTransactionId("0"); //manually set the transaction id
+		genesisTransaction.getOutputs().add(new TransactionOutput(genesisTransaction.getReciepient(), genesisTransaction.getValue(), genesisTransaction.getTransactionId())); //manually add the Transactions Output
+		UTXOs.put(genesisTransaction.getOutputs().get(0).id, genesisTransaction.getOutputs().get(0)); //its important to store our first transaction in the UTXOs list.
 		
 		System.out.println("Creating and Mining Genesis block... ");
 		Block genesis = new Block("0");
@@ -80,7 +80,11 @@ public class Main {
 		ExecuteCommands server = new ExecuteCommands(8888);
 		ExecuteCommands client = new ExecuteCommands(8889);
 		client.connect("127.0.0.1", 8888);
-		System.out.println(client.getLastBlock());
+		String block = client.getLastBlock();
+		//System.out.println(block);
+		Block block4 = Block.fromJsonToBlock(block);
+		System.out.println("***************");
+		System.out.println(StringUtil.getJson(block4));
 	}
 	
 	

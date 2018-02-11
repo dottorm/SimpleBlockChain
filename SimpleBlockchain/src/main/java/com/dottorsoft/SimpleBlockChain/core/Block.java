@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.dottorsoft.SimpleBlockChain.util.StringUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Block {
 
@@ -13,6 +16,8 @@ public class Block {
 	private ArrayList<Transaction> transactions = new ArrayList<Transaction>(); //our data will be a simple message.
 	private long timeStamp; //as number of milliseconds since 1/1/1970.
 	private int nonce;
+	
+	public Block(){};
 	
 	//Block Constructor.  
 	public Block(String previousHash ) {
@@ -57,6 +62,18 @@ public class Block {
 		transactions.add(transaction);
 		System.out.println("Transaction Successfully added to Block");
 		return true;
+	}
+	
+	public static Block fromJsonToBlock(String json){
+		if(json == null) throw new NullPointerException();
+		JsonObject b = new JsonParser().parse(json).getAsJsonObject();
+		Block block = new Block();
+		block.setPreviousHash(b.get("previousHash").getAsString());
+		block.setHash(b.get("hash").getAsString());
+		block.setMerkleRoot(b.get("merkleRoot").getAsString());
+		block.setNonce(b.get("nonce").getAsInt());
+		block.setTimeStamp(b.get("timeStamp").getAsLong());
+		return block;
 	}
 
 	public String getHash() {

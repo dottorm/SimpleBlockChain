@@ -9,14 +9,14 @@ import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
 public class Transaction {
 	
-	public String transactionId; //Contains a hash of transaction*
-	public PublicKey sender; //Senders address/public key.
-	public PublicKey reciepient; //Recipients address/public key.
-	public float value; //Contains the amount we wish to send to the recipient.
-	public byte[] signature; //This is to prevent anybody else from spending funds in our wallet.
+	private String transactionId; //Contains a hash of transaction*
+	private PublicKey sender; //Senders address/public key.
+	private PublicKey reciepient; //Recipients address/public key.
+	private float value; //Contains the amount we wish to send to the recipient.
+	private byte[] signature; //This is to prevent anybody else from spending funds in our wallet.
 	
-	public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
-	public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
+	private ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
+	private ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
 	
 	private static int sequence = 0; //A rough count of how many transactions have been generated 
 	
@@ -100,5 +100,69 @@ public class Transaction {
 				StringUtil.getStringFromKey(reciepient) +
 				Float.toString(value) + sequence
 				);
+	}
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public PublicKey getSender() {
+		return sender;
+	}
+
+	public void setSender(PublicKey sender) {
+		this.sender = sender;
+	}
+
+	public PublicKey getReciepient() {
+		return reciepient;
+	}
+
+	public void setReciepient(PublicKey reciepient) {
+		this.reciepient = reciepient;
+	}
+
+	public float getValue() {
+		return value;
+	}
+
+	public void setValue(float value) {
+		this.value = value;
+	}
+
+	public byte[] getSignature() {
+		return signature;
+	}
+
+	public void setSignature(byte[] signature) {
+		this.signature = signature;
+	}
+
+	public ArrayList<TransactionInput> getInputs() {
+		return inputs;
+	}
+
+	public void setInputs(ArrayList<TransactionInput> inputs) {
+		this.inputs = inputs;
+	}
+
+	public ArrayList<TransactionOutput> getOutputs() {
+		return outputs;
+	}
+
+	public void setOutputs(ArrayList<TransactionOutput> outputs) {
+		this.outputs = outputs;
+	}
+
+	public static int getSequence() {
+		return sequence;
+	}
+
+	public static void setSequence(int sequence) {
+		Transaction.sequence = sequence;
 	}
 }

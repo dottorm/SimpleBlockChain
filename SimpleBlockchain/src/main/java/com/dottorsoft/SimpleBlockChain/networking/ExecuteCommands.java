@@ -6,6 +6,8 @@ public class ExecuteCommands {
 	
 	private Peer2Peer networking;
 	
+	public ExecuteCommands(){}
+	
 	public ExecuteCommands(int port){
 		networking = new Peer2Peer(port);
 		

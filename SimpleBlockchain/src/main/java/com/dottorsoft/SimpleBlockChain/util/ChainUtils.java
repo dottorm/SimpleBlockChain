@@ -15,7 +15,7 @@ public class ChainUtils {
 		Block previousBlock;
 		String hashTarget = new String(new char[Parameters.difficulty]).replace('\0', '0');
 		HashMap<String,TransactionOutput> tempUTXOs = new HashMap<String,TransactionOutput>(); //a temporary working list of unspent transactions at a given block state.
-		tempUTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0));
+		tempUTXOs.put(genesisTransaction.getOutputs().get(0).id, genesisTransaction.getOutputs().get(0));
 		
 		//loop through blockchain to check hashes:
 		for(int i=1; i < blockchain.size(); i++) {
@@ -52,7 +52,7 @@ public class ChainUtils {
 					return false; 
 				}
 				
-				for(TransactionInput input: currentTransaction.inputs) {	
+				for(TransactionInput input: currentTransaction.getInputs()) {	
 					tempOutput = tempUTXOs.get(input.transactionOutputId);
 					
 					if(tempOutput == null) {
@@ -68,15 +68,15 @@ public class ChainUtils {
 					tempUTXOs.remove(input.transactionOutputId);
 				}
 				
-				for(TransactionOutput output: currentTransaction.outputs) {
+				for(TransactionOutput output: currentTransaction.getOutputs()) {
 					tempUTXOs.put(output.id, output);
 				}
 				
-				if( currentTransaction.outputs.get(0).reciepient != currentTransaction.reciepient) {
+				if( currentTransaction.getOutputs().get(0).reciepient != currentTransaction.getReciepient()) {
 					System.out.println("#Transaction(" + t + ") output reciepient is not who it should be");
 					return false;
 				}
-				if( currentTransaction.outputs.get(1).reciepient != currentTransaction.sender) {
+				if( currentTransaction.getOutputs().get(1).reciepient != currentTransaction.getSender()) {
 					System.out.println("#Transaction(" + t + ") output 'change' is not sender.");
 					return false;
 				}
