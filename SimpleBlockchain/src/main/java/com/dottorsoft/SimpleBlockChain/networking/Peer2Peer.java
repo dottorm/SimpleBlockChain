@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import com.dottorsoft.SimpleBlockChain.util.ChainUtils;
+import com.dottorsoft.SimpleBlockChain.util.Commands;
 import com.dottorsoft.SimpleBlockChain.util.Parameters;
 import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
@@ -61,12 +63,7 @@ public class Peer2Peer {
 			command = inputStream.readUTF();
 			System.out.println(command);
 			
-			//outputStream = new DataOutputStream(socket.getOutputStream());
-			if(command.equals("getblockchain")){
-				
-				System.out.println("yes");
-				outputStream.writeUTF(StringUtil.getJson(Parameters.blockchain));
-			}
+			outputStream.writeUTF(elborateCommands(command));
 			
 		}
 	}
@@ -84,12 +81,15 @@ public class Peer2Peer {
 		}
 	}
 	
-	public void receive(){
+	public String receive(){
+		String data = null;
 		try {
-			
-			System.out.println("Receiving: "+inputStream.readUTF());
+			data = inputStream.readUTF();
+			System.out.println("Receiving: "+data);
+			return data;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return data;
 		}
 	}
 	
@@ -108,6 +108,16 @@ public class Peer2Peer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private String elborateCommands(String command){
+		
+		if(command == null) return null;
+		
+		if(command.equals(Commands.GET_BLOCKCHAIN.getCommand())){return StringUtil.getJson(Parameters.blockchain);}
+		if(command.equals(Commands.GET_LAST_BLOCK.getCommand())){return StringUtil.getJson(ChainUtils.getLastBlock());}
+		
+		return null;
 	}
 
 }

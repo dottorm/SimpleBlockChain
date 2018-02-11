@@ -7,6 +7,7 @@ import com.dottorsoft.SimpleBlockChain.core.Block;
 import com.dottorsoft.SimpleBlockChain.core.Transaction;
 import com.dottorsoft.SimpleBlockChain.core.TransactionOutput;
 import com.dottorsoft.SimpleBlockChain.core.Wallet;
+import com.dottorsoft.SimpleBlockChain.networking.ExecuteCommands;
 import com.dottorsoft.SimpleBlockChain.networking.Peer2Peer;
 import com.dottorsoft.SimpleBlockChain.util.ChainUtils;
 import com.dottorsoft.SimpleBlockChain.util.Parameters;
@@ -76,12 +77,10 @@ public class Main {
 		System.out.println("\nThe block chain: ");
 		System.out.println(blockchainJson);*/
 		
-		/*Peer2Peer server = new Peer2Peer(8888);
-		Peer2Peer client = new Peer2Peer(8889);
-		client.connect("localhost", 8888);
-		client.send("getblockchain");*/
-		
-		System.out.println(StringUtil.getJson(ChainUtils.getLastBlock()));
+		ExecuteCommands server = new ExecuteCommands(8888);
+		ExecuteCommands client = new ExecuteCommands(8889);
+		client.connect("127.0.0.1", 8888);
+		System.out.println(client.getLastBlock());
 	}
 	
 	
