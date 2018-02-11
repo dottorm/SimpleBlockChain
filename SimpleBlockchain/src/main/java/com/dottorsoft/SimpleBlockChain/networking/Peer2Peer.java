@@ -38,20 +38,28 @@ public class Peer2Peer {
 	}
 	
 	private void listen() throws IOException{
+		
 		System.out.println("Server Starting");
 		server = new ServerSocket(port);
 		System.out.println("Server Started port: "+port);
 		String command;
 		while(true){
 			socket = server.accept();
-			System.out.println("Connection Received from: "+socket.toString());
 			inputStream = new DataInputStream(socket.getInputStream());
+			outputStream = new DataOutputStream(socket.getOutputStream());
+			System.out.println("Connection Received from: "+socket.toString());
+			
+			System.out.println(socket.getPort()+" "+socket.getInetAddress().toString());
+			
 			command = inputStream.readUTF();
-			System.out.println(inputStream.readUTF());
-			/*outputStream = new DataOutputStream(socket.getOutputStream());
+			System.out.println(command);
+			
+			//outputStream = new DataOutputStream(socket.getOutputStream());
 			if(command.equals("getblockchain")){
+				
+				System.out.println("yes");
 				outputStream.writeUTF(StringUtil.getJson(Parameters.blockchain));
-			}*/
+			}
 			
 		}
 	}
@@ -61,6 +69,7 @@ public class Peer2Peer {
 			socket = new Socket(host, port);
 			outputStream = new DataOutputStream(socket.getOutputStream());
 			inputStream = new DataInputStream(socket.getInputStream());
+			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -70,7 +79,8 @@ public class Peer2Peer {
 	
 	public void receive(){
 		try {
-			System.out.println(inputStream.readUTF());
+			
+			System.out.println("Receiving: "+inputStream.readUTF());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

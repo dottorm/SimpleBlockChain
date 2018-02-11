@@ -79,6 +79,7 @@ public class Main {
 		Peer2Peer client = new Peer2Peer(8889);
 		client.connect("localhost", 8888);
 		client.send("getblockchain");
+		client.receive();
 	}
 	
 	
