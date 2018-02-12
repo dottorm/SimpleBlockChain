@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.3.RELEASE</version>
+    </parent>
+
+    <groupId>com.dottorsoft</groupId>
+    <artifactId>simple-blockchain</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <name></name>
+    <description></description>
+
+
+    <properties>
+        <java.version>1.8</java.version>
+        <jasypt-spring-boot-starter.version>1.4</jasypt-spring-boot-starter.version>
+        <slf4j-api.version>1.7.25</slf4j-api.version>
+        <commons-lang3.version>3.6</commons-lang3.version>
+        <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
+        <javax.inject.version>1</javax.inject.version>
+
+        <recipe-main.version>0.0.1-SNAPSHOT</recipe-main.version>
+    </properties>
+
+    <modules>
+        <module>simple-blockchain-main</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${javax.inject.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+
+        <profile>
+            <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>local</id>
+            <properties>
+                <spring.profiles.active>local</spring.profiles.active>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+
+    </profiles>
+
+</project>

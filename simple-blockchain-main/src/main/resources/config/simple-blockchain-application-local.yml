@@ -1,0 +1,8 @@
+server:
+    port: 8080
+
+logging:
+  level:
+    com.dottorsoft: DEBUG
+    org.hibernate:
+      SQL: DEBUG

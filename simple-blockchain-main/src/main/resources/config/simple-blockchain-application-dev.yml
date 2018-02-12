@@ -1,0 +1,9 @@
+server:
+    port: 8080
+
+logging:
+  config: file:/appl/configs/logback-dev.xml
+  level:
+    com.dottorsoft: DEBUG
+    org.hibernate:
+      SQL: DEBUG
