@@ -4,16 +4,19 @@ import com.dottorsoft.SimpleBlockchain.main.util.ChainUtils;
 import com.dottorsoft.SimpleBlockchain.main.util.Commands;
 import com.dottorsoft.SimpleBlockchain.main.util.Parameters;
 import com.dottorsoft.SimpleBlockchain.main.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Peer2Peer {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Peer2Peer.class);
 
 	private int port = 8888;
 	private Socket socket;
@@ -41,9 +44,9 @@ public class Peer2Peer {
 
 	private void listen() throws IOException{
 
-		System.out.println("Server Starting");
+		LOGGER.debug("Server Starting");
 		server = new ServerSocket(port);
-		System.out.println("Server Started port: "+port);
+		LOGGER.debug("Server Started port: {}", port);
 		String command;
 
 		Peer peer;
@@ -53,15 +56,15 @@ public class Peer2Peer {
 			socket = server.accept();
 			inputStream = new DataInputStream(socket.getInputStream());
 			outputStream = new DataOutputStream(socket.getOutputStream());
-			System.out.println("Connection Received from: "+socket.toString());
+			LOGGER.debug("Connection Received from: {}", socket.toString());
 
 			peer = new Peer(socket.getInetAddress().toString(),socket.getPort());
 			peers.add(peer);
 
-			System.out.println("New Peer: "+peer.toString());
+			LOGGER.debug("New Peer: {}", peer.toString());
 
 			command = inputStream.readUTF();
-			System.out.println(command);
+			LOGGER.debug(command);
 
 			outputStream.writeUTF(elborateCommands(command));
 
@@ -74,8 +77,6 @@ public class Peer2Peer {
 			outputStream = new DataOutputStream(socket.getOutputStream());
 			inputStream = new DataInputStream(socket.getInputStream());
 
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,11 +86,11 @@ public class Peer2Peer {
 		String data = null;
 		try {
 			data = inputStream.readUTF();
-			System.out.println("Receiving: "+data);
+			LOGGER.debug("Receiving: {}", data);
 			return data;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return data;
+			return null;
 		}
 	}
 

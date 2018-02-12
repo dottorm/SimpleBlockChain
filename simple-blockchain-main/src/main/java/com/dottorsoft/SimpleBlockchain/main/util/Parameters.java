@@ -8,6 +8,6 @@ public class Parameters {
 
 	public static int difficulty = 2;
 
-	public static ArrayList<Block> blockchain = new ArrayList<Block>();
+	public static ArrayList<Block> blockchain = new ArrayList<>();
 
 }

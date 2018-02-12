@@ -8,14 +8,17 @@ import com.dottorsoft.SimpleBlockchain.main.networking.ExecuteCommands;
 import com.dottorsoft.SimpleBlockchain.main.util.ChainUtils;
 import com.dottorsoft.SimpleBlockchain.main.util.Parameters;
 import com.dottorsoft.SimpleBlockchain.main.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.Security;
 import java.util.HashMap;
 
 public class Main {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-	public static HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
+	public static HashMap<String,TransactionOutput> UTXOs = new HashMap<>();
 
 	public static float minimumTransaction = 0.1f;
 	public static Wallet walletA;
@@ -38,52 +41,52 @@ public class Main {
 		genesisTransaction.getOutputs().add(new TransactionOutput(genesisTransaction.getReciepient(), genesisTransaction.getValue(), genesisTransaction.getTransactionId())); //manually add the Transactions Output
 		UTXOs.put(genesisTransaction.getOutputs().get(0).id, genesisTransaction.getOutputs().get(0)); //its important to store our first transaction in the UTXOs list.
 
-		System.out.println("Creating and Mining Genesis block... ");
+		LOGGER.info("Creating and Mining Genesis block... ");
 		Block genesis = new Block("0");
 		genesis.addTransaction(genesisTransaction);
 		addBlock(genesis);
 
 		//testing
 		Block block1 = new Block(genesis.getHash());
-		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-		System.out.println("\nWalletA is Attempting to send funds (40) to WalletB...");
+		LOGGER.info("\nWalletA's balance is: " + walletA.getBalance());
+		LOGGER.info("\nWalletA is Attempting to send funds (40) to WalletB...");
 		block1.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
 		addBlock(block1);
-		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-		System.out.println("WalletB's balance is: " + walletB.getBalance());
+		LOGGER.info("\nWalletA's balance is: " + walletA.getBalance());
+		LOGGER.info("WalletB's balance is: " + walletB.getBalance());
 
 		Block block2 = new Block(block1.getHash());
-		System.out.println("\nWalletA Attempting to send more funds (1000) than it has...");
+		LOGGER.info("\nWalletA Attempting to send more funds (1000) than it has...");
 		block2.addTransaction(walletA.sendFunds(walletB.publicKey, 1000f));
 		addBlock(block2);
-		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-		System.out.println("WalletB's balance is: " + walletB.getBalance());
+		LOGGER.info("\nWalletA's balance is: " + walletA.getBalance());
+		LOGGER.info("WalletB's balance is: " + walletB.getBalance());
 
 		Block block3 = new Block(block2.getHash());
-		System.out.println("\nWalletB is Attempting to send funds (20) to WalletA...");
+		LOGGER.info("\nWalletB is Attempting to send funds (20) to WalletA...");
 		block3.addTransaction(walletB.sendFunds( walletA.publicKey, 20));
-		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-		System.out.println("WalletB's balance is: " + walletB.getBalance());
+		LOGGER.info("\nWalletA's balance is: " + walletA.getBalance());
+		LOGGER.info("WalletB's balance is: " + walletB.getBalance());
 		addBlock(block3);
 
 
 		if(!ChainUtils.isChainValid(Parameters.blockchain, genesisTransaction)){
-			System.out.println("Not Valid Chain!!");
+			LOGGER.info("Not Valid Chain!!");
 			return;
 		}
 
 		/*String blockchainJson = StringUtil.getJson(Parameters.blockchain);
-		System.out.println("\nThe block chain: ");
-		System.out.println(blockchainJson);*/
+		LOGGER.info("\nThe block chain: ");
+		LOGGER.info(blockchainJson);*/
 
 		ExecuteCommands server = new ExecuteCommands(8888);
 		ExecuteCommands client = new ExecuteCommands(8889);
 		client.connect("127.0.0.1", 8888);
 		String block = client.getLastBlock();
-		//System.out.println(block);
+		//LOGGER.info(block);
 		Block block4 = Block.fromJsonToBlock(block);
-		System.out.println("***************");
-		System.out.println(StringUtil.getJson(block4));
+		LOGGER.info("***************");
+		LOGGER.info(StringUtil.getJson(block4));
 	}
 
 

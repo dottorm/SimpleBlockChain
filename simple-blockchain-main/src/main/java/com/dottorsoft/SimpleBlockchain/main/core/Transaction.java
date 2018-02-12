@@ -2,12 +2,16 @@ package com.dottorsoft.SimpleBlockchain.main.core;
 
 import com.dottorsoft.SimpleBlockchain.main.Main;
 import com.dottorsoft.SimpleBlockchain.main.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class Transaction {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Transaction.class);
 
 	private String transactionId; //Contains a hash of transaction*
 	private PublicKey sender; //Senders address/public key.
@@ -30,8 +34,8 @@ public class Transaction {
 
 	public boolean processTransaction() {
 
-		if(verifiySignature() == false) {
-			System.out.println("#Transaction Signature failed to verify");
+		if(!verifiySignature()) {
+			LOGGER.debug("#Transaction Signature failed to verify");
 			return false;
 		}
 
@@ -42,7 +46,7 @@ public class Transaction {
 
 		//Checks if transaction is valid:
 		if(getInputsValue() < Main.minimumTransaction) {
-			System.out.println("Transaction Inputs to small: " + getInputsValue());
+			LOGGER.debug("Transaction Inputs to small: {}", getInputsValue());
 			return false;
 		}
 

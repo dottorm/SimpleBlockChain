@@ -3,11 +3,15 @@ package com.dottorsoft.SimpleBlockchain.main.core;
 import com.dottorsoft.SimpleBlockchain.main.util.StringUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Block {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Block.class);
 
 	private String hash;
 	private String previousHash;
@@ -28,13 +32,12 @@ public class Block {
 
 	//Calculate new hash based on blocks contents
 	public String calculateHash() {
-		String calculatedhash = StringUtil.applySha256(
+		return StringUtil.applySha256(
 				previousHash +
 						Long.toString(timeStamp) +
 						Integer.toString(nonce) +
 						merkleRoot
 		);
-		return calculatedhash;
 	}
 
 	//Increases nonce value until hash target is reached.
@@ -45,21 +48,19 @@ public class Block {
 			nonce ++;
 			hash = calculateHash();
 		}
-		System.out.println("Block Mined!!! : " + hash);
+		LOGGER.debug("Block Mined!!! : {}", hash);
 	}
 
 	//Add transactions to this block
 	public boolean addTransaction(Transaction transaction) {
 		//process transaction and check if valid, unless block is genesis block then ignore.
-		if(transaction == null) return false;
-		if((previousHash != "0")) {
-			if((transaction.processTransaction() != true)) {
-				System.out.println("Transaction failed to process. Discarded.");
-				return false;
-			}
+		if (transaction == null || (!previousHash.equals("0") && !transaction.processTransaction())) {
+			LOGGER.debug("Transaction failed to process. Discarded.");
+			return false;
 		}
+
 		transactions.add(transaction);
-		System.out.println("Transaction Successfully added to Block");
+		LOGGER.debug("Transaction Successfully added to Block");
 		return true;
 	}
 

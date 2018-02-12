@@ -1,6 +1,8 @@
 package com.dottorsoft.SimpleBlockchain.main.core;
 
 import com.dottorsoft.SimpleBlockchain.main.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
@@ -9,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Wallet {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Wallet.class);
 
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
@@ -51,7 +55,7 @@ public class Wallet {
 
 	public Transaction sendFunds(PublicKey _recipient,float value ) {
 		if(getBalance() < value) {
-			System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
+			LOGGER.debug("#Not Enough funds to send transaction. Transaction Discarded.");
 			return null;
 		}
 		ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
