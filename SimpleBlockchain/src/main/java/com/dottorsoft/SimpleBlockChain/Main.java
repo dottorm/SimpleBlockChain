@@ -86,14 +86,19 @@ public class Main {
 		ExecuteCommands client2 = new ExecuteCommands(8890);
 		client.connect("127.0.0.1", 8888);
 		client2.connect("127.0.0.1", 8888);
-		String chain = client.getBlockChain();
+		//server.connect("127.0.0.1", 8890);
+		System.out.println("client"+client.getBlockChainSize());
+		System.out.println("client2"+client2.getBlockChainSize());
+		server.connect("127.0.0.1", 8889);
+		System.out.println("server"+server.getBlockChainSize());
+		//String chain = client.getBlockChain();
 		//System.out.println(chain);
 		//System.out.println(client.getBlockChainSize());
 		//System.out.println(client2.getBlockChainSize());
-		Block block4 = new Block();
-		ArrayList<Block> c = block4.fromJsonToChain(chain);
+		//Block block4 = new Block();
+		//ArrayList<Block> c = block4.fromJsonToChain(chain);
 		//System.out.println("***************");
-		System.out.println(StringUtil.getJson(c));
+		//System.out.println(StringUtil.getJson(c));
 	}
 	
 	

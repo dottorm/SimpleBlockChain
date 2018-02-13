@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import com.dottorsoft.SimpleBlockChain.util.ChainUtils;
 import com.dottorsoft.SimpleBlockChain.util.Commands;
@@ -18,7 +18,7 @@ public class Peer2Peer {
 	private int port = 8888;
 	private Socket socket;
 	private ServerSocket server;
-	private ArrayList<Peer> peers = new ArrayList<Peer>();
+	private LinkedList<Peer> peers = new LinkedList<Peer>();
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
 	private Thread peerThread;
@@ -50,20 +50,26 @@ public class Peer2Peer {
 		
 		while(true){
 			
-			socket = server.accept();
-			inputStream = new DataInputStream(socket.getInputStream());
-			outputStream = new DataOutputStream(socket.getOutputStream());
-			System.out.println("Connection Received from: "+socket.toString());
+			Socket clientSocket = server.accept();
+			inputStream = new DataInputStream(clientSocket.getInputStream());
+			outputStream = new DataOutputStream(clientSocket.getOutputStream());
+			System.out.println("Connection Received from: "+clientSocket.toString());
 						
-			peer = new Peer(socket.getInetAddress().toString(),socket.getPort());
+			peer = new Peer(clientSocket.getInetAddress().toString(),clientSocket.getPort());
 			peers.add(peer);
 			
-			System.out.println("New Peer: "+peer.toString());
+			System.out.println("connected peers "+peers.size());
 			
 			command = inputStream.readUTF();
 			System.out.println(command);
 			
 			outputStream.writeUTF(elborateCommands(command));
+			
+			
+			
+			
+			outputStream.close();
+			inputStream.close();
 			
 		}
 	}
