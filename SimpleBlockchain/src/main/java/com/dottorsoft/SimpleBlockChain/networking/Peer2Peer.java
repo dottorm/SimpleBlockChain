@@ -85,7 +85,6 @@ public class Peer2Peer {
 		String data = null;
 		try {
 			data = inputStream.readUTF();
-			System.out.println("Receiving: "+data);
 			return data;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -115,7 +114,8 @@ public class Peer2Peer {
 		if(command == null) return null;
 		
 		if(command.equals(Commands.GET_BLOCKCHAIN.getCommand())){return StringUtil.getJson(Parameters.blockchain);}
-		if(command.equals(Commands.GET_LAST_BLOCK.getCommand())){return StringUtil.getJson(ChainUtils.getLastBlock());}
+		if(command.equals(Commands.POST_LAST_MINED_BLOCK.getCommand())){return StringUtil.getJson(ChainUtils.getLastBlock());}
+		if(command.equals(Commands.GET_BLOCK_CHAIN_SIZE.getCommand())){return StringUtil.getJson(Parameters.blockchain.size());}
 		
 		return null;
 	}

@@ -1,5 +1,8 @@
 package com.dottorsoft.SimpleBlockChain.util;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,10 +13,10 @@ import com.dottorsoft.SimpleBlockChain.core.TransactionOutput;
 
 public class ChainUtils {
 	
-	public static Boolean isChainValid(ArrayList<Block> blockchain,Transaction genesisTransaction) {
+	public static Boolean isChainValid(ArrayList<Block> blockchain,Transaction genesisTransaction) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
 		Block currentBlock; 
 		Block previousBlock;
-		String hashTarget = new String(new char[Parameters.difficulty]).replace('\0', '0');
+		
 		HashMap<String,TransactionOutput> tempUTXOs = new HashMap<String,TransactionOutput>(); //a temporary working list of unspent transactions at a given block state.
 		tempUTXOs.put(genesisTransaction.getOutputs().get(0).id, genesisTransaction.getOutputs().get(0));
 		
@@ -33,7 +36,7 @@ public class ChainUtils {
 				return false;
 			}
 			//check if hash is solved
-			if(!currentBlock.getHash().substring( 0, Parameters.difficulty).equals(hashTarget)) {
+			if(containsDifficulty(currentBlock.getHash())) {
 				System.out.println("#This block hasn't been mined");
 				return false;
 			}
@@ -43,7 +46,7 @@ public class ChainUtils {
 			for(int t=0; t <currentBlock.getTransactions().size(); t++) {
 				Transaction currentTransaction = currentBlock.getTransactions().get(t);
 				
-				if(!currentTransaction.verifiySignature()) {
+				if(!currentTransaction.verifySignature()) {
 					System.out.println("#Signature on Transaction(" + t + ") is Invalid");
 					return false; 
 				}
@@ -92,9 +95,13 @@ public class ChainUtils {
 		return !hash.equals(prevHash);
 	}
 	
+	public static boolean containsDifficulty(String hash){
+		String hashTarget = new String(new char[Parameters.difficulty]).replace('\0', '0');
+		return !hash.substring( 0, Parameters.difficulty).equals(hashTarget);
+	}
+	
 	public static Block getLastBlock(){
 		if(Parameters.blockchain.size() == 0 || Parameters.blockchain == null) return null;
-		
 		return Parameters.blockchain.get(Parameters.blockchain.size() -1);
 	}
 

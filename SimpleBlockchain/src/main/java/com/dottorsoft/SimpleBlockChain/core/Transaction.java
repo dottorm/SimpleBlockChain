@@ -1,8 +1,16 @@
 package com.dottorsoft.SimpleBlockChain.core;
 
-import java.security.PrivateKey;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Base64;
+
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 
 import com.dottorsoft.SimpleBlockChain.Main;
 import com.dottorsoft.SimpleBlockChain.util.StringUtil;
@@ -10,8 +18,8 @@ import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 public class Transaction {
 	
 	private String transactionId; //Contains a hash of transaction*
-	private PublicKey sender; //Senders address/public key.
-	private PublicKey reciepient; //Recipients address/public key.
+	private String sender; //Senders address/public key.
+	private String reciepient; //Recipients address/public key.
 	private float value; //Contains the amount we wish to send to the recipient.
 	private byte[] signature; //This is to prevent anybody else from spending funds in our wallet.
 	
@@ -20,17 +28,19 @@ public class Transaction {
 	
 	private static int sequence = 0; //A rough count of how many transactions have been generated 
 	
+	public Transaction(){}
+	
 	// Constructor: 
-	public Transaction(PublicKey from, PublicKey to, float value,  ArrayList<TransactionInput> inputs) {
+	public Transaction(String from, String to, float value,  ArrayList<TransactionInput> inputs) {
 		this.sender = from;
 		this.reciepient = to;
 		this.value = value;
 		this.inputs = inputs;
 	}
 	
-	public boolean processTransaction() {
+	public boolean processTransaction() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
 		
-		if(verifiySignature() == false) {
+		if(verifySignature() == false) {
 			System.out.println("#Transaction Signature failed to verify");
 			return false;
 		}
@@ -75,14 +85,14 @@ public class Transaction {
 		return total;
 	}
 	
-	public void generateSignature(PrivateKey privateKey) {
-		String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(reciepient) + Float.toString(value);
+	public void generateSignature(BCECPrivateKey privateKey) {
+		String data = sender + reciepient + Float.toString(value);
 		signature = StringUtil.applyECDSASig(privateKey,data);		
 	}
 	
-	public boolean verifiySignature() {
-		String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(reciepient) + Float.toString(value);
-		return StringUtil.verifyECDSASig(sender, data, signature);
+	public boolean verifySignature() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
+		String data = sender + reciepient + Float.toString(value);
+		return StringUtil.verifyECDSASig(StringUtil.getPublicKeyfromString(sender), data, signature);
 	}
 	
 	public float getOutputsValue() {
@@ -96,8 +106,8 @@ public class Transaction {
 	private String calulateHash() {
 		sequence++; //increase the sequence to avoid 2 identical transactions having the same hash
 		return StringUtil.applySha256(
-				StringUtil.getStringFromKey(sender) +
-				StringUtil.getStringFromKey(reciepient) +
+				sender +
+				reciepient +
 				Float.toString(value) + sequence
 				);
 	}
@@ -110,19 +120,19 @@ public class Transaction {
 		this.transactionId = transactionId;
 	}
 
-	public PublicKey getSender() {
+	public String getSender() {
 		return sender;
 	}
 
-	public void setSender(PublicKey sender) {
+	public void setSender(String sender) {
 		this.sender = sender;
 	}
 
-	public PublicKey getReciepient() {
+	public String getReciepient() {
 		return reciepient;
 	}
 
-	public void setReciepient(PublicKey reciepient) {
+	public void setReciepient(String reciepient) {
 		this.reciepient = reciepient;
 	}
 

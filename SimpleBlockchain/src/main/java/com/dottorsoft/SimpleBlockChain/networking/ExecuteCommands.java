@@ -25,8 +25,13 @@ public class ExecuteCommands {
 		return networking.receive();
 	}
 	
-	public String getLastBlock(){
-		networking.send(Commands.GET_LAST_BLOCK.getCommand());
+	public int getBlockChainSize(){
+		networking.send(Commands.GET_BLOCK_CHAIN_SIZE.getCommand());
+		return Integer.parseInt(networking.receive());
+	}
+	
+	public String postLastMinedBlock(){
+		networking.send(Commands.POST_LAST_MINED_BLOCK.getCommand());
 		return networking.receive();
 	}
 	

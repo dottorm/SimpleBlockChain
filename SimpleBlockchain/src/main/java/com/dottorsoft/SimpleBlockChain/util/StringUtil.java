@@ -1,12 +1,21 @@
 package com.dottorsoft.SimpleBlockChain.util;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
+
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 
 import com.dottorsoft.SimpleBlockChain.core.Transaction;
 import com.google.gson.GsonBuilder;
@@ -36,7 +45,7 @@ public class StringUtil {
 	}
 	
 	//Applies ECDSA Signature and returns the result ( as bytes ).
-	public static byte[] applyECDSASig(PrivateKey privateKey, String input) {
+	public static byte[] applyECDSASig(BCECPrivateKey privateKey, String input) {
 		Signature dsa;
 		byte[] output = new byte[0];
 		try {
@@ -76,6 +85,19 @@ public class StringUtil {
 	
 	public static String getStringFromKey(Key key) {
 		return Base64.getEncoder().encodeToString(key.getEncoded());
+	}
+	
+	public static PublicKey getPublicKeyfromString(String key){
+		PublicKey publickey = null;
+		try {
+			byte[] encoded = Base64.getDecoder().decode(key);
+			KeyFactory factory;
+			factory = KeyFactory.getInstance("ECDSA","BC");
+			publickey = factory.generatePublic(new X509EncodedKeySpec(encoded));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 return publickey;
 	}
 	
 	public static String getMerkleRoot(ArrayList<Transaction> transactions) {

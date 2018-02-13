@@ -1,10 +1,15 @@
 package com.dottorsoft.SimpleBlockChain.core;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.dottorsoft.SimpleBlockChain.util.ChainUtils;
 import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -50,10 +55,10 @@ public class Block {
 	}
 	
 	//Add transactions to this block
-	public boolean addTransaction(Transaction transaction) {
+	public boolean addTransaction(Transaction transaction) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
 		//process transaction and check if valid, unless block is genesis block then ignore.
 		if(transaction == null) return false;		
-		if((previousHash != "0")) {
+		if((!previousHash.equals("0") )) {
 			if((transaction.processTransaction() != true)) {
 				System.out.println("Transaction failed to process. Discarded.");
 				return false;
@@ -64,16 +69,19 @@ public class Block {
 		return true;
 	}
 	
-	public static Block fromJsonToBlock(String json){
-		if(json == null) throw new NullPointerException();
-		JsonObject b = new JsonParser().parse(json).getAsJsonObject();
-		Block block = new Block();
-		block.setPreviousHash(b.get("previousHash").getAsString());
-		block.setHash(b.get("hash").getAsString());
-		block.setMerkleRoot(b.get("merkleRoot").getAsString());
-		block.setNonce(b.get("nonce").getAsInt());
-		block.setTimeStamp(b.get("timeStamp").getAsLong());
-		return block;
+	public ArrayList<Block> fromJsonToChain(String json){
+		ArrayList<Block> chain = new ArrayList<Block>();
+		
+		JsonArray array = new JsonParser().parse(json).getAsJsonArray();
+		
+		Block block;  
+		
+		for(int i=0; i < array.size(); i++){
+			block = new Gson().fromJson(array.get(i), Block.class);
+			chain.add(block);
+		}
+		
+		return chain;
 	}
 
 	public String getHash() {
@@ -160,7 +168,5 @@ public class Block {
 			return false;
 		return true;
 	}
-	
-	
-	
+
 }

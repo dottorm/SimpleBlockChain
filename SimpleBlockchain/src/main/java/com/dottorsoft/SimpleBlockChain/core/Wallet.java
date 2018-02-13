@@ -2,16 +2,20 @@ package com.dottorsoft.SimpleBlockChain.core;
 
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
+
 import com.dottorsoft.SimpleBlockChain.Main;
+import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
 public class Wallet {
 	
-	public PrivateKey privateKey;
-	public PublicKey publicKey;
+	private BCECPrivateKey privateKey;
+	private String publicKey;
 	
 	public HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
 	
@@ -28,8 +32,8 @@ public class Wallet {
 			keyGen.initialize(ecSpec, random); //256 
 	        KeyPair keyPair = keyGen.generateKeyPair();
 	        // Set the public and private keys from the keyPair
-	        privateKey = keyPair.getPrivate();
-	        publicKey = keyPair.getPublic();
+	        setPrivateKey((BCECPrivateKey) keyPair.getPrivate());
+	        setPublicKey(StringUtil.getStringFromKey(keyPair.getPublic()));
 	        
 		}catch(Exception e) {
 			throw new RuntimeException(e);
@@ -49,7 +53,7 @@ public class Wallet {
 		return total;
 	}
 	
-	public Transaction sendFunds(PublicKey _recipient,float value ) {
+	public Transaction sendFunds(String _recipient,float value ) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		if(getBalance() < value) {
 			System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
 			return null;
@@ -73,6 +77,22 @@ public class Wallet {
 		}
 		
 		return newTransaction;
+	}
+
+	public BCECPrivateKey getPrivateKey() {
+		return privateKey;
+	}
+
+	public void setPrivateKey(BCECPrivateKey privateKey) {
+		this.privateKey = privateKey;
+	}
+
+	public String getPublicKey() {
+		return publicKey;
+	}
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
 	}
 	
 }

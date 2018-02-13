@@ -2,8 +2,9 @@ package com.dottorsoft.SimpleBlockChain.util;
 
 public enum Commands {
 	
-	GET_BLOCKCHAIN("getblockcain"),
-	GET_LAST_BLOCK("getlastblock");
+	GET_BLOCKCHAIN("getBlockChain"),
+	POST_LAST_MINED_BLOCK("postLastMinedBlock"),
+	GET_BLOCK_CHAIN_SIZE("getBlockChainSize");
 	
 	private String command;
 	
