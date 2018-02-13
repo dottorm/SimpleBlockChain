@@ -63,7 +63,7 @@ public class Peer2Peer {
 			command = input.readUTF();
 			System.out.println(command);
 			
-			output.writeUTF(elborateCommands(command));
+			output.writeUTF(Dispatcher.getInstance().elborateCommands(command));
 			
 			output.close();
 			input.close();
@@ -113,15 +113,6 @@ public class Peer2Peer {
 		}
 	}
 	
-	private String elborateCommands(String command){
-		
-		if(command == null) return null;
-		
-		if(command.equals(Commands.GET_BLOCKCHAIN.getCommand())){return StringUtil.getJson(Parameters.blockchain);}
-		if(command.equals(Commands.POST_LAST_MINED_BLOCK.getCommand())){return StringUtil.getJson(ChainUtils.getLastBlock());}
-		if(command.equals(Commands.GET_BLOCK_CHAIN_SIZE.getCommand())){return StringUtil.getJson(Parameters.blockchain.size());}
-		
-		return null;
-	}
+	
 
 }
