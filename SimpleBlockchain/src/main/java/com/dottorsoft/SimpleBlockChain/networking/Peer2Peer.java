@@ -51,8 +51,8 @@ public class Peer2Peer {
 		while(true){
 			
 			Socket clientSocket = server.accept();
-			inputStream = new DataInputStream(clientSocket.getInputStream());
-			outputStream = new DataOutputStream(clientSocket.getOutputStream());
+			DataInputStream input = new DataInputStream(clientSocket.getInputStream());
+			DataOutputStream output = new DataOutputStream(clientSocket.getOutputStream());
 			System.out.println("Connection Received from: "+clientSocket.toString());
 						
 			peer = new Peer(clientSocket.getInetAddress().toString(),clientSocket.getPort());
@@ -60,17 +60,13 @@ public class Peer2Peer {
 			
 			System.out.println("connected peers "+peers.size());
 			
-			command = inputStream.readUTF();
+			command = input.readUTF();
 			System.out.println(command);
 			
-			outputStream.writeUTF(elborateCommands(command));
+			output.writeUTF(elborateCommands(command));
 			
-			
-			
-			
-			outputStream.close();
-			inputStream.close();
-			
+			output.close();
+			input.close();
 		}
 	}
 	
@@ -91,6 +87,7 @@ public class Peer2Peer {
 		String data = null;
 		try {
 			data = inputStream.readUTF();
+			inputStream.close();
 			return data;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -102,6 +99,7 @@ public class Peer2Peer {
 		try {
 			outputStream.writeUTF(data);
 			outputStream.flush();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
