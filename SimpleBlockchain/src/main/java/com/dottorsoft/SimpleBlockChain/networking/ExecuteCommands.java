@@ -38,5 +38,9 @@ public class ExecuteCommands {
 	public String receive(){
 		return networking.receive();
 	}
+	
+	public void ping(){
+		//to be done
+	}
 
 }

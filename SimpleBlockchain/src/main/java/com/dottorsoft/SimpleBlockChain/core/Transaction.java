@@ -1,14 +1,9 @@
 package com.dottorsoft.SimpleBlockChain.core;
 
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.PublicKey;
-import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
-import java.util.Base64;
 
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 

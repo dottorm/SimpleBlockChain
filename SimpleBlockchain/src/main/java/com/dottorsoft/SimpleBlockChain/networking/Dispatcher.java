@@ -28,7 +28,7 @@ public class Dispatcher {
 		if(command.equals(Commands.POST_LAST_MINED_BLOCK.getCommand())){return StringUtil.getJson(ChainUtils.getLastBlock());}
 		if(command.equals(Commands.GET_BLOCK_CHAIN_SIZE.getCommand())){return StringUtil.getJson(Parameters.blockchain.size());}
 		
-		return null;
+		return Commands.UNKNOWN_COMMAND.getCommand();
 	}
 
 }

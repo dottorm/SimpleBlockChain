@@ -8,11 +8,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 
-import com.dottorsoft.SimpleBlockChain.util.ChainUtils;
-import com.dottorsoft.SimpleBlockChain.util.Commands;
-import com.dottorsoft.SimpleBlockChain.util.Parameters;
-import com.dottorsoft.SimpleBlockChain.util.StringUtil;
-
 public class Peer2Peer {
 	
 	private int port = 8888;
@@ -24,8 +19,11 @@ public class Peer2Peer {
 	private Thread peerThread;
 	private Thread sendThread;
 	
+	private boolean isRunning;
+	
 	public Peer2Peer(int port){
 		this.port = port;
+		isRunning = true;
 		peerThread = new Thread(new Runnable() {
 			   public void run() {
 			       try {
@@ -47,16 +45,17 @@ public class Peer2Peer {
 		String command;
 		
 		Peer peer;
-		
-		while(true){
+		while(isRunning){
 			
 			Socket clientSocket = server.accept();
 			DataInputStream input = new DataInputStream(clientSocket.getInputStream());
 			DataOutputStream output = new DataOutputStream(clientSocket.getOutputStream());
 			System.out.println("Connection Received from: "+clientSocket.toString());
-						
-			peer = new Peer(clientSocket.getInetAddress().toString(),clientSocket.getPort());
+			
+			peer = new Peer(clientSocket.getInetAddress().getHostAddress(),clientSocket.getPort());
 			peers.add(peer);
+			
+			System.out.println(peer.toString());
 			
 			System.out.println("connected peers "+peers.size());
 			
@@ -68,6 +67,10 @@ public class Peer2Peer {
 			output.close();
 			input.close();
 		}
+	}
+	
+	public void stop(){
+		isRunning = false;
 	}
 	
 	public void connect(String host, int port){
@@ -113,6 +116,9 @@ public class Peer2Peer {
 		}
 	}
 	
+	public void ping(){
+		
+	}
 	
 
 }
