@@ -3,11 +3,11 @@ package com.dottorsoft.SimpleBlockChain.networking;
 public class Peer {
 	
 	private String ip;
-	private int port;
+	private int serverPort;
 	
-	public Peer(String ip, int port){
+	public Peer(String ip, int serverPort){
 		this.ip = ip;
-		this.port = port;
+		this.serverPort = serverPort;
 	}
 
 	public String getIp() {
@@ -18,18 +18,17 @@ public class Peer {
 		this.ip = ip;
 	}
 
-	public int getPort() {
-		return port;
+	public int getServerPort() {
+		return serverPort;
 	}
 
-	public void setPort(int port) {
-		this.port = port;
+	public void setServerPort(int port) {
+		this.serverPort = port;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Peer [ip=%s, port=%s]", ip, port);
+		return String.format("Peer [ip=%s, serverPort=%s]", ip, serverPort);
 	}
 	
-
 }

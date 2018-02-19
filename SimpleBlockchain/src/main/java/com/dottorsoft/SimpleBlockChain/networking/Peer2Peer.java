@@ -8,14 +8,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 
+import com.dottorsoft.SimpleBlockChain.util.Commands;
+
 public class Peer2Peer {
 	
 	private int port = 8888;
 	private Socket socket;
 	private ServerSocket server;
 	private LinkedList<Peer> peers = new LinkedList<Peer>();
-	private DataInputStream inputStream;
-	private DataOutputStream outputStream;
+	private DataInputStream inputStreamClient;
+	private DataOutputStream outputStreamClient;
 	private Thread peerThread;
 	private Thread sendThread;
 	
@@ -44,25 +46,31 @@ public class Peer2Peer {
 		System.out.println("Server Started port: "+port);
 		String command;
 		
-		Peer peer;
+		Socket clientSocket;
+		
+		DataInputStream input;
+		DataOutputStream output;
+		
 		while(isRunning){
 			
-			Socket clientSocket = server.accept();
-			DataInputStream input = new DataInputStream(clientSocket.getInputStream());
-			DataOutputStream output = new DataOutputStream(clientSocket.getOutputStream());
+			clientSocket = server.accept();
+			input = new DataInputStream(clientSocket.getInputStream());
+			output = new DataOutputStream(clientSocket.getOutputStream());
 			System.out.println("Connection Received from: "+clientSocket.toString());
-			
-			peer = new Peer(clientSocket.getInetAddress().getHostAddress(),clientSocket.getPort());
-			peers.add(peer);
-			
-			System.out.println(peer.toString());
-			
-			System.out.println("connected peers "+peers.size());
 			
 			command = input.readUTF();
 			System.out.println(command);
 			
-			output.writeUTF(Dispatcher.getInstance().elborateCommands(command));
+			Peer peer = null;
+			
+			if(command.contains(Commands.REGISTERING.getCommand())){
+				output.writeUTF("registered");
+				peer = new Peer(clientSocket.getInetAddress().getHostAddress(),clientSocket.getLocalPort());
+				System.out.println(peer.toString());
+				peers.add(peer);
+			}else{
+				output.writeUTF(CommandsDispatcher.getInstance().elaborateCommands(command));
+			}
 			
 			output.close();
 			input.close();
@@ -76,8 +84,8 @@ public class Peer2Peer {
 	public void connect(String host, int port){
 		try {
 			socket = new Socket(host, port);
-			outputStream = new DataOutputStream(socket.getOutputStream());
-			inputStream = new DataInputStream(socket.getInputStream());
+			outputStreamClient = new DataOutputStream(socket.getOutputStream());
+			inputStreamClient = new DataInputStream(socket.getInputStream());
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -89,8 +97,8 @@ public class Peer2Peer {
 	public String receive(){
 		String data = null;
 		try {
-			data = inputStream.readUTF();
-			inputStream.close();
+			data = inputStreamClient.readUTF();
+			inputStreamClient.close();
 			return data;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -100,8 +108,8 @@ public class Peer2Peer {
 	
 	public void send(String data){
 		try {
-			outputStream.writeUTF(data);
-			outputStream.flush();
+			outputStreamClient.writeUTF(data);
+			outputStreamClient.flush();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -115,9 +123,21 @@ public class Peer2Peer {
 			e.printStackTrace();
 		}
 	}
-	
-	public void ping(){
-		
+
+	public LinkedList<Peer> getPeers() {
+		return peers;
+	}
+
+	public void setPeers(LinkedList<Peer> peers) {
+		this.peers = peers;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
 	}
 	
 

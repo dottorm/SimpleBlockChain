@@ -5,7 +5,10 @@ public enum Commands {
 	GET_BLOCKCHAIN("getBlockChain"),
 	POST_LAST_MINED_BLOCK("postLastMinedBlock"),
 	GET_BLOCK_CHAIN_SIZE("getBlockChainSize"),
-	UNKNOWN_COMMAND("command unknown");
+	UNKNOWN_COMMAND("command unknown"),
+	REGISTERING("registering"),
+	PING("ping"),
+	PONG("pong");
 	
 	private String command;
 	
@@ -15,6 +18,10 @@ public enum Commands {
 	
 	public String getCommand(){
 		return this.command;
+	}
+	
+	public String getCommand(String param){
+		return String.format(this.command, param);
 	}
 
 }

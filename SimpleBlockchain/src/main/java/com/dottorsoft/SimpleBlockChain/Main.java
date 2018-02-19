@@ -4,7 +4,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.dottorsoft.SimpleBlockChain.core.Block;
@@ -12,10 +11,8 @@ import com.dottorsoft.SimpleBlockChain.core.Transaction;
 import com.dottorsoft.SimpleBlockChain.core.TransactionOutput;
 import com.dottorsoft.SimpleBlockChain.core.Wallet;
 import com.dottorsoft.SimpleBlockChain.networking.ExecuteCommands;
-import com.dottorsoft.SimpleBlockChain.networking.Peer2Peer;
 import com.dottorsoft.SimpleBlockChain.util.ChainUtils;
 import com.dottorsoft.SimpleBlockChain.util.Parameters;
-import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
 public class Main {
 	
@@ -86,11 +83,17 @@ public class Main {
 		ExecuteCommands client2 = new ExecuteCommands(8890);
 		client.connect("127.0.0.1", 8888);
 		client2.connect("127.0.0.1", 8888);
+		System.out.println("RECEIVED: "+client.register());
+		client2.register();
 		//server.connect("127.0.0.1", 8890);
+		client.connect("127.0.0.1", 8888);
 		System.out.println("client"+client.getBlockChainSize());
-		System.out.println("client2"+client2.getBlockChainSize());
-		server.connect("127.0.0.1", 8889);
-		System.out.println("server"+server.getBlockChainSize());
+		
+		server.pingAll();
+		//System.out.println("client2"+client2.getBlockChainSize());
+		//server.connect("127.0.0.1", 8889);
+		
+		//System.out.println("server"+server.getBlockChainSize());
 		//String chain = client.getBlockChain();
 		//System.out.println(chain);
 		//System.out.println(client.getBlockChainSize());

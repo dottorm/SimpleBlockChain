@@ -10,7 +10,6 @@ public class ExecuteCommands {
 	
 	public ExecuteCommands(int port){
 		networking = new Peer2Peer(port);
-		
 	}
 	
 	/**
@@ -35,12 +34,25 @@ public class ExecuteCommands {
 		return networking.receive();
 	}
 	
-	public String receive(){
+	public String ping(Peer p){
+		connect(p.getIp(), p.getServerPort());
+		networking.send(Commands.PING.getCommand());
 		return networking.receive();
 	}
 	
-	public void ping(){
-		//to be done
+	public void pingAll(){
+		for(Peer p : networking.getPeers()){
+			System.out.println(ping(p));
+		}
+	}
+	
+	public String register(){
+		networking.send(Commands.REGISTERING.getCommand());
+		return networking.receive();
+	}
+	
+	public String receive(){
+		return networking.receive();
 	}
 
 }
