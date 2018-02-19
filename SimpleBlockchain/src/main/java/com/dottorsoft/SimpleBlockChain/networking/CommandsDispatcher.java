@@ -5,28 +5,29 @@ import com.dottorsoft.SimpleBlockChain.util.Commands;
 import com.dottorsoft.SimpleBlockChain.util.Parameters;
 import com.dottorsoft.SimpleBlockChain.util.StringUtil;
 
-public class Dispatcher {
+public class CommandsDispatcher {
 	
-	private static Dispatcher dispatcher = null;
+	private static CommandsDispatcher dispatcher = null;
 	
-	private Dispatcher(){}
+	private CommandsDispatcher(){}
 	
-	public static Dispatcher getInstance(){
+	public static CommandsDispatcher getInstance(){
 		
 		if(dispatcher == null){
-			dispatcher = new Dispatcher();
+			dispatcher = new CommandsDispatcher();
 		}
 		
 		return dispatcher;
 	}
 	
-	public String elborateCommands(String command){
+	public String elaborateCommands(String command){
 		
 		if(command == null) return null;
 		
 		if(command.equals(Commands.GET_BLOCKCHAIN.getCommand())){return StringUtil.getJson(Parameters.blockchain);}
 		if(command.equals(Commands.POST_LAST_MINED_BLOCK.getCommand())){return StringUtil.getJson(ChainUtils.getLastBlock());}
 		if(command.equals(Commands.GET_BLOCK_CHAIN_SIZE.getCommand())){return StringUtil.getJson(Parameters.blockchain.size());}
+		if(command.equals(Commands.PING.getCommand())){return StringUtil.getJson(Commands.PONG.getCommand());}
 		
 		return Commands.UNKNOWN_COMMAND.getCommand();
 	}
