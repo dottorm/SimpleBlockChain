@@ -3,8 +3,10 @@ package com.dottorsoft.SimpleBlockChain.util;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
 import com.dottorsoft.SimpleBlockChain.core.Block;
 import com.dottorsoft.SimpleBlockChain.core.Transaction;
@@ -13,25 +15,28 @@ import com.dottorsoft.SimpleBlockChain.core.TransactionOutput;
 
 public class ChainUtils {
 	
-	public static Boolean isChainValid(ArrayList<Block> blockchain,Transaction genesisTransaction) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
+	public static Boolean isChainValid(LinkedHashMap<String, Block> blockchain,Transaction genesisTransaction) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
 		Block currentBlock; 
-		Block previousBlock;
+		
+		Iterator<Entry<String, Block>> it = blockchain.entrySet().iterator();
+		
+		Block previousBlock = it.next().getValue();
 		
 		HashMap<String,TransactionOutput> tempUTXOs = new HashMap<String,TransactionOutput>(); //a temporary working list of unspent transactions at a given block state.
 		tempUTXOs.put(genesisTransaction.getOutputs().get(0).id, genesisTransaction.getOutputs().get(0));
 		
 		//loop through blockchain to check hashes:
-		for(int i=1; i < blockchain.size(); i++) {
+		while(it.hasNext()) {
 			
-			currentBlock = blockchain.get(i);
-			previousBlock = blockchain.get(i-1);
+			currentBlock = it.next().getValue();
+			
 			//compare registered hash and calculated hash:
 			if(isValidHash(currentBlock.getHash(), currentBlock.calculateHash()) ){
 				System.out.println("#Current Hashes not equal");
 				return false;
 			}
 			//compare previous hash and registered previous hash
-			if(isValidHash(previousBlock.getHash(),currentBlock.getPreviousHash()) ) {
+			if(previousBlock != null && (isValidHash(previousBlock.getHash(),currentBlock.getPreviousHash())) ) {
 				System.out.println("#Previous Hashes not equal");
 				return false;
 			}
@@ -51,7 +56,7 @@ public class ChainUtils {
 					return false; 
 				}
 				if(currentTransaction.getInputsValue() != currentTransaction.getOutputsValue()) {
-					System.out.println("#Inputs are note equal to outputs on Transaction(" + t + ")");
+					System.out.println("#Inputs are not equal to outputs on Transaction(" + t + ")");
 					return false; 
 				}
 				
@@ -85,6 +90,7 @@ public class ChainUtils {
 				}
 				
 			}
+			previousBlock = currentBlock;
 			
 		}
 		System.out.println("Blockchain is valid");

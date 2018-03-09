@@ -43,21 +43,21 @@ public class Main {
 		System.out.println("Creating and Mining Genesis block... ");
 		Block genesis = new Block("0");
 		genesis.addTransaction(genesisTransaction);
-		addBlock(genesis);
+		addBlock(genesis.getHash(),genesis);
 		
 		//testing
 		Block block1 = new Block(genesis.getHash());
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("\nWalletA is Attempting to send funds (40) to WalletB...");
 		block1.addTransaction(walletA.sendFunds(walletB.getPublicKey(), 40f));
-		addBlock(block1);
+		addBlock(block1.getHash(),block1);
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
 		
 		Block block2 = new Block(block1.getHash());
 		System.out.println("\nWalletA Attempting to send more funds (1000) than it has...");
 		block2.addTransaction(walletA.sendFunds(walletB.getPublicKey(), 1000f));
-		addBlock(block2);
+		addBlock(block2.getHash(),block2);
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
 		
@@ -66,7 +66,7 @@ public class Main {
 		block3.addTransaction(walletB.sendFunds( walletA.getPublicKey(), 20));
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
-		addBlock(block3);
+		addBlock(block3.getHash(),block3);
 		
 		
 		if(!ChainUtils.isChainValid(Parameters.blockchain, genesisTransaction)){
@@ -106,8 +106,8 @@ public class Main {
 	
 	
 	
-	public static void addBlock(Block newBlock) {
+	public static void addBlock(String current, Block newBlock) {
 		newBlock.mineBlock(Parameters.difficulty);
-		Parameters.blockchain.add(newBlock);
+		Parameters.blockchain.put(current, newBlock);
 	}
 }
