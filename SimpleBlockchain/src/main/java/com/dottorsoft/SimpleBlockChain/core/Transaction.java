@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 
@@ -169,5 +170,60 @@ public class Transaction {
 
 	public static void setSequence(int sequence) {
 		Transaction.sequence = sequence;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((inputs == null) ? 0 : inputs.hashCode());
+		result = prime * result + ((outputs == null) ? 0 : outputs.hashCode());
+		result = prime * result + ((reciepient == null) ? 0 : reciepient.hashCode());
+		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
+		result = prime * result + Arrays.hashCode(signature);
+		result = prime * result + ((transactionId == null) ? 0 : transactionId.hashCode());
+		result = prime * result + Float.floatToIntBits(value);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transaction other = (Transaction) obj;
+		if (inputs == null) {
+			if (other.inputs != null)
+				return false;
+		} else if (!inputs.equals(other.inputs))
+			return false;
+		if (outputs == null) {
+			if (other.outputs != null)
+				return false;
+		} else if (!outputs.equals(other.outputs))
+			return false;
+		if (reciepient == null) {
+			if (other.reciepient != null)
+				return false;
+		} else if (!reciepient.equals(other.reciepient))
+			return false;
+		if (sender == null) {
+			if (other.sender != null)
+				return false;
+		} else if (!sender.equals(other.sender))
+			return false;
+		if (!Arrays.equals(signature, other.signature))
+			return false;
+		if (transactionId == null) {
+			if (other.transactionId != null)
+				return false;
+		} else if (!transactionId.equals(other.transactionId))
+			return false;
+		if (Float.floatToIntBits(value) != Float.floatToIntBits(other.value))
+			return false;
+		return true;
 	}
 }
